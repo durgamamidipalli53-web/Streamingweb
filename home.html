@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Clone - Interactive Streaming</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Minimal required inline CSS for iframe safety -->
+    
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <nav id="navbar">
+        <div class="nav-left">
+            <div class="logo">NETFLIX</div>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="tvshows.html">TV Shows</a></li>
+                <li><a href="movies.html">Movies</a></li>
+                <li><a href="new.html">New</a></li>
+                
+            </ul>
+        </div>
+        <div class="nav-right">
+            <button class="icon-btn">🔍</button>
+            <button class="icon-btn">🔔</button>
+            <div class="user-avatar"></div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div id="hero" class="hero">
+        <div class="hero-content">
+            <h1 id="hero-title" class="hero-title">Loading...</h1>
+            <p id="hero-desc" class="hero-description">Select a movie to view details.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-play" onclick="openModal()">
+                    <span>▶</span> Play
+                </button>
+                <button class="btn btn-info" onclick="openModal()">
+                    <span>ℹ</span> More Info
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div id="rows-container" class="row-container"></div>
+    </main>
+
+    
+    <!-- Modal / Popup -->
+<div id="modal" class="modal-overlay" onclick="outsideClickClose(event)">
+    <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+            <h3 id="modal-title" class="modal-title">Movie Title</h3>
+            <button class="close-modal" onclick="closeModal()">&times;</button>
+        </div>
+
+        <!-- 🎬 VIDEO SECTION -->
+        <div class="video-container">
+            <div class="video-wrapper">
+                <iframe
+                    id="trailer-player"
+                    title="YouTube Trailer"
+                    frameborder="0"
+                    allow="autoplay; encrypted-media"
+                    allowfullscreen>
+                </iframe>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="modal-controls">
+            <p style="margin-bottom:10px;color:#ccc;">
+                Enter Trailer URL (YouTube):
+            </p>
+
+            <div class="url-input-group">
+                <input
+                    type="text"
+                    id="youtube-url"
+                    class="url-input"
+                    placeholder="https://www.youtube.com/watch?v=VIDEO_ID">
+                <button
+                    class="load-video-btn"
+                    onclick="loadCustomTrailer()">
+                    Load
+                </button>
+            </div>
+
+            <div id="error-message" class="error-msg" style="display:none;">
+                Invalid YouTube URL. Please try again.
+            </div>
+        </div>
+
+    </div>
+</div>
+
+    <!-- Footer -->
+    <footer>
+        <p>Netflix Clone Demo - Created with HTML / CSS / JS</p>
+        <p>&copy; 2023 Streaming Interface</p>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+
+</body>
+</html>

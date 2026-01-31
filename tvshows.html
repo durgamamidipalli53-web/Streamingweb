@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Netflix TV Shows</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #141414;
+  color: #fff;
+  font-family: Arial, sans-serif;
+}
+
+/* ================= HEADER ================= */
+header {
+  display: flex;
+  align-items: center;
+  padding: 15px 50px;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 100;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+}
+
+.logo {
+  color: red;
+  font-size: 28px;
+  font-weight: bold;
+  margin-right: 40px;
+}
+
+nav a {
+  margin-right: 20px;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* ================= BANNER ================= */
+.banner {
+  height: 80vh;
+  background: url("https://image.tmdb.org/t/p/original/qJxzjUjCpTPvDHldNnlbRC4OqEh.jpg") center/cover no-repeat;
+  display: flex;
+  align-items: flex-end;
+  padding: 50px;
+}
+
+.banner h1 {
+  font-size: 50px;
+}
+
+/* ================= ROWS ================= */
+.container {
+  margin-top: 50px;
+  padding: 20px;
+}
+
+.row {
+  margin-bottom: 40px;
+}
+
+.row h2 {
+  margin-bottom: 10px;
+}
+
+.row-posters {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+}
+
+/* ================= POSTER CARD ================= */
+.poster {
+  min-width: 200px;
+  height: 120px;
+  background: #222;
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.poster:hover {
+  transform: scale(1.15);
+  z-index: 10;
+}
+
+/* ================= POPUP ================= */
+.popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background: #000;
+  padding: 20px;
+  width: 60%;
+}
+
+.popup img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+.close {
+  color: red;
+  cursor: pointer;
+  float: right;
+  font-size: 22px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">NETFLIX</div>
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="tvshows.html">TV Shows</a>
+    <a href="movies.html">Movies</a>
+    <a href="new.html">New</a>
+  </nav>
+</header>
+
+<div class="banner">
+  <h1>TV Shows</h1>
+</div>
+
+<div class="container" id="content"></div>
+
+<!-- POPUP -->
+<div class="popup" id="popup">
+  <div class="popup-content">
+    <span class="close" onclick="closePopup()">✖</span>
+    <h2 id="popupTitle"></h2>
+
+    <iframe
+      id="trailerFrame"
+      width="100%"
+      height="400"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+  </div>
+</div>
+
+
+<script>
+const categories = [
+/* ===================== CRIME ===================== */
+{
+  title: "Crime TV Shows",
+  shows: [
+    { name: "Breaking Bad", image: "https://tse1.mm.bing.net/th/id/OIP.q4i9cC9dAyOu3MdQRkAmfwHaEK?pid=Api&P=0&h=180" },
+    { name: "Better Call Saul", image: "https://image.tmdb.org/t/p/w500/luoKpgVwi1E5nQsi7W0UuKHu2Rq.jpg" },
+    { name: "Peaky Blinders", image: "https://wallpaperaccess.com/full/6520910.jpg" },
+    { name: "Narcos", image: "https://image.tmdb.org/t/p/w500/rTmal9fDbwh5F0waol2hq35U4ah.jpg" },
+    { name: "Mindhunter", image: "https://image.tmdb.org/t/p/w500/fbKE87mojpIETWepSbD5Qt741fp.jpg" },
+    { name: "Ozark", image: "https://image.tmdb.org/t/p/w500/m73bD8VjibSKuTWg597GQVyVhSb.jpg" },
+    { name: "Money Heist", image: "https://image.tmdb.org/t/p/w500/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg" }
+  ]
+},
+
+/* ===================== SCI-FI ===================== */
+{
+  title: "Sci-Fi & Fantasy",
+  shows: [
+    { name: "Stranger Things", image: "https://image.tmdb.org/t/p/w500/49WJfeN0moxb9IPfGn8AIqMGskD.jpg" },
+    { name: "Dark", image: "https://image.tmdb.org/t/p/w500/apbrbWs8M9lyOpJYU5WXrpFbk1Z.jpg" },
+    { name: "Black Mirror", image: "https://image.tmdb.org/t/p/w500/7PRddO7z7mcPi21nZTCMGShAyy1.jpg" },
+    { name: "The 100", image: "https://image.tmdb.org/t/p/w500/wcaDIAG1QdXQLRaj4vC1EFdBT2.jpg" },
+    { name: "Lost in Space", image: "https://tse4.mm.bing.net/th/id/OIP.4QK1q2WDNI9pQQoj10CvSwHaEo?pid=Api&P=0&h=180" },
+    { name: "Altered Carbon", image: "https://tse4.mm.bing.net/th/id/OIP.LRhwY7JKEBv7ZGSR-wowaQHaK5?pid=Api&P=0&h=180" },
+    { name: "The Umbrella Academy", image: "https://image.tmdb.org/t/p/w500/scZlQQYnDVlnpxFTxaIv2g0BWnL.jpg" }
+  ]
+},
+
+/* ===================== ACTION ===================== */
+{
+  title: "Action & Adventure",
+  shows: [
+    { name: "The Witcher", image: "https://image.tmdb.org/t/p/w500/zrPpUlehQaBf8YX2NrVrKK8IEpf.jpg" },
+    { name: "Vikings", image: "https://image.tmdb.org/t/p/w500/bQLrHIRNEkE3PdIWQrZHynQZazu.jpg" },
+    { name: "Reacher", image: "https://tse2.mm.bing.net/th/id/OIP.xxsBOalPfp66-5A5nfShPAHaJQ?pid=Api&P=0&h=180" },
+    { name: "Jack Ryan", image: "https://static1.srcdn.com/wordpress/wp-content/uploads/2023/05/jack-ryan-shadow-recruit-poster.jpeg" },
+    { name: "The Night Agent", image: "https://tse3.mm.bing.net/th/id/OIP.ouyjvMUd_HHMS9mLsGkJEQHaFh?pid=Api&P=0&h=180" },
+    { name: "Daredevil", image: "https://image.tmdb.org/t/p/w500/QWbPaDxiB6LW2LjASknzYBvjMj.jpg" },
+    { name: "Arrow", image: "https://image.tmdb.org/t/p/w500/gKG5QGz5Ngf8fgWpBsWtlg5L2SF.jpg" }
+  ]
+},
+
+/* ===================== DRAMA ===================== */
+{
+  title: "Drama Series",
+  shows: [
+    { name: "The Crown", image: "https://image.tmdb.org/t/p/w500/1M876KPjulVwppEpldhdc8V4o68.jpg" },
+    { name: "House of Cards", image: "https://cdllife.com/wp-content/uploads/2013/02/Netflix-Series-House-of-Cards-Debut.jpg" },
+    { name: "Fast and Furios", image: "https://wallpapers.com/images/hd/fast-and-furious-pictures-h0qreone83qoee4j.jpg" },
+    { name: "Euphoria", image: "https://image.tmdb.org/t/p/w500/3Q0hd3heuWwDWpwcDkhQOA6TYWI.jpg" },
+    { name: "13 Reasons Why", image: "https://image.tmdb.org/t/p/w500/nel144y4dIOdFFid6twN5mAX9Yd.jpg" },
+    { name: "The Sandman", image: "https://image.tmdb.org/t/p/w500/q54qEgagGOYCq5D1903eBVMNkbo.jpg" },
+    { name: "Elite", image: "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/de37c431-eb26-498b-922e-4398ef81df1b/dtjj8z-75b826f2-25be-4040-8a36-ccf1358d18a9.jpg/v1/fill/w_426,h_535,q_75,strp/elite_movie_poster_by_khambata_dtjj8z-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTM1IiwicGF0aCI6IlwvZlwvZGUzN2M0MzEtZWIyNi00OThiLTkyMmUtNDM5OGVmODFkZjFiXC9kdGpqOHotNzViODI2ZjItMjViZS00MDQwLThhMzYtY2NmMTM1OGQxOGE5LmpwZyIsIndpZHRoIjoiPD00MjYifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6aW1hZ2Uub3BlcmF0aW9ucyJdfQ.8C70VHXBdZ96BTI188OPQzJ66maVOzX6oHdolBg_MNU" }
+  ]
+},
+
+/* ===================== COMEDY ===================== */
+{
+  title: "Comedy & Sitcoms",
+  shows: [
+    { name: "Friends", image: "https://image.tmdb.org/t/p/w500/f496cm9enuEsZkSPzCwnTESEK5s.jpg" },
+    { name: "The Office", image: "https://image.tmdb.org/t/p/w500/qWnJzyZhyy74gjpSjIXWmuk0ifX.jpg" },
+    { name: "Brooklyn Nine-Nine", image: "https://image.tmdb.org/t/p/w500/hgRMSOt7a1b8qyQR68vUixJPang.jpg" },
+    { name: "How I Met Your Mother", image: "https://image.tmdb.org/t/p/w500/b34jPzmB0wZy7EjUZoleXOl2RRI.jpg" },
+    { name: "Big Bang Theory", image: "https://image.tmdb.org/t/p/w500/ooBGRQBdbGzBxAVfExiO8r7kloA.jpg" },
+    { name: "Wednesday", image: "https://image.tmdb.org/t/p/w500/jeGtaMwGxPmQN5xM4ClnwPQcNQz.jpg" },
+    { name: "Money Heist", image: "https://sm.ign.com/t/ign_fr/cover/m/money-heis/money-heist_6vhn.1200.jpg" }
+  ]
+}
+];
+
+
+const content = document.getElementById("content");
+
+categories.forEach(cat => {
+  const row = document.createElement("div");
+  row.className = "row";
+
+  const title = document.createElement("h2");
+  title.textContent = cat.title;
+
+  const posters = document.createElement("div");
+  posters.className = "row-posters";
+
+  cat.shows.forEach(show => {
+    const card = document.createElement("div");
+    card.className = "poster";
+
+    const img = document.createElement("img");
+    img.src = show.image;
+    img.alt = show.name;
+
+    card.onclick = () => openPopup(show);
+
+    card.appendChild(img);
+    posters.appendChild(card);
+  });
+
+  row.appendChild(title);
+  row.appendChild(posters);
+  content.appendChild(row);
+});
+
+function openPopup(trailerId, title) {
+  document.getElementById("popupTitle").innerText = title;
+
+  document.getElementById("trailerFrame").src =
+    `https://www.youtube.com/embed/${trailerId}?autoplay=1`;
+
+  document.getElementById("popup").style.display = "flex";
+}
+
+function closePopup() {
+  document.getElementById("popup").style.display = "none";
+
+  // MUST — lekapothe audio continue avuthadi
+  document.getElementById("trailerFrame").src = "";
+}
+
+</script>
+
+</body>
+</html>
